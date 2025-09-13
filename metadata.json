@@ -1,0 +1,5 @@
+{
+  "name": "Tide Chart Viewer",
+  "description": "Displays tide predictions for the next 5 hours for NOAA station 9411340.",
+  "requestFramePermissions": []
+}
