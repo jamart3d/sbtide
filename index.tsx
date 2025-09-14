@@ -40,7 +40,19 @@ const chartOptions = {
       display: false, // Hide y-axis completely
     },
     x: {
-      display: false, // Hide x-axis completely
+      display: true, // Show x-axis for sun/moon icons
+      grid: {
+        display: false, // No grid lines for a cleaner look
+      },
+      ticks: {
+        font: {
+          size: 32, // Make icons large and friendly
+        },
+        padding: 10,
+      },
+      border: {
+        display: false, // Hide the axis line
+      }
     }
   },
   elements: {
@@ -72,7 +84,7 @@ function App() {
     // The NOAA API does not provide CORS headers, so direct client-side requests are blocked by browsers.
     // To fix this, we route the request through a CORS proxy.
     const noaaUrl = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${beginDate}&range=5&station=${stationId}&product=predictions&datum=MLLW&units=english&time_zone=lst_ldt&format=json&application=tide-chart-app`;
-    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(noaaUrl)}`;
+    const url = `https://corsproxy.io/?${encodeURIComponent(noaaUrl)}`;
 
     try {
       const response = await fetch(url);
@@ -86,7 +98,13 @@ function App() {
         throw new Error(data.error?.message || 'Invalid data from NOAA API');
       }
       
-      const labels = data.predictions.map(() => ''); // No text labels needed
+      const labels = data.predictions.map(p => {
+        // p.t is a string like "2024-07-25 15:06"
+        const predictionDate = new Date(p.t);
+        const hour = predictionDate.getHours();
+        // Sun icon for hours between 6 AM and 6 PM (18:00)
+        return (hour >= 6 && hour < 18) ? '☀️' : '🌙';
+      });
       const values = data.predictions.map(p => parseFloat(p.v));
       
       setChartData({
