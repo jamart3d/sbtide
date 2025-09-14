@@ -72,8 +72,7 @@ function App() {
     // The NOAA API does not provide CORS headers, so direct client-side requests are blocked by browsers.
     // To fix this, we route the request through a CORS proxy.
     const noaaUrl = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${beginDate}&range=5&station=${stationId}&product=predictions&datum=MLLW&units=english&time_zone=lst_ldt&format=json&application=tide-chart-app`;
-    // Switched to a more reliable CORS proxy to resolve fetch errors.
-    const url = `https://corsproxy.io/?${encodeURIComponent(noaaUrl)}`;
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(noaaUrl)}`;
 
     try {
       const response = await fetch(url);
