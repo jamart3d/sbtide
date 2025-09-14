@@ -120,11 +120,21 @@ function App() {
       {error && <div className="status-indicator" role="alert" aria-label="Error">😟</div>}
       
       {chartData && (
-        <section className="chart-container" aria-label="A visual of the water level going up and down.">
-           <div style={{ position: 'relative', height: '80vh' }}>
-            <Line options={chartOptions} data={chartData} />
-           </div>
-        </section>
+        <>
+          <section className="chart-container" aria-label="A visual of the water level going up and down.">
+             <div style={{ position: 'relative', height: '80vh' }}>
+              <Line options={chartOptions} data={chartData} />
+             </div>
+          </section>
+          <button
+            className="refresh-button"
+            onClick={fetchTideData}
+            disabled={loading}
+            aria-label="Refresh tide data"
+          >
+            🔄
+          </button>
+        </>
       )}
     </main>
   );

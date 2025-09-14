@@ -43,6 +43,38 @@ main.container {
   animation: pulse 1.5s infinite ease-in-out;
 }
 
+.refresh-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 2.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+  z-index: 1000;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.refresh-button:hover:not(:disabled) {
+  transform: scale(1.1);
+  background-color: white;
+}
+
+.refresh-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -76,5 +108,12 @@ main.container {
   }
   .status-indicator {
     font-size: 6rem;
+  }
+  .refresh-button {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    bottom: 1rem;
+    right: 1rem;
   }
 }
