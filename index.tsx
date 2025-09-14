@@ -68,17 +68,22 @@ function App() {
 
     const now = new Date();
     const beginDate = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${beginDate}&range=5&station=${stationId}&product=predictions&datum=MLLW&units=english&time_zone=lst_ldt&format=json&application=tide-chart-app`;
+    
+    // The NOAA API does not provide CORS headers, so direct client-side requests are blocked by browsers.
+    // To fix this, we route the request through a CORS proxy.
+    const noaaUrl = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${beginDate}&range=5&station=${stationId}&product=predictions&datum=MLLW&units=english&time_zone=lst_ldt&format=json&application=tide-chart-app`;
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(noaaUrl)}`;
 
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error();
+        throw new Error('Network response was not ok');
       }
       const data = await response.json();
 
       if (data.error || !data.predictions || data.predictions.length === 0) {
-        throw new Error();
+        // Handle cases where proxy returns success but NOAA API returned an error inside the JSON
+        throw new Error(data.error?.message || 'Invalid data from NOAA API');
       }
       
       const labels = data.predictions.map(() => ''); // No text labels needed
@@ -97,6 +102,7 @@ function App() {
       });
 
     } catch (e) {
+      console.error(e); // Log the error for debugging
       setError(true);
     } finally {
       setLoading(false);
